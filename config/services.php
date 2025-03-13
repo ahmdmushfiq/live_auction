@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'youtube' => [
+        'stream_url' => env('YOUTUBE_STREAM_URL', 'https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID'),
+    ],
+
 ];

@@ -13,6 +13,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashBoardController::class, 'index'])->name('dashboard');
     Route::get('bids-show/{id}', [DashBoardController::class, 'bidsShow'])->name('bids-show');
+    Route::get('bidder-bids', [DashBoardController::class, 'bidderBids'])->name('bidder-bids');
     Route::post('place-bid', [BidController::class, 'placeBid'])->name('place-bid');
     Route::get('/chat/users', [ChatController::class, 'listUsers'])->name('chat-users');
     Route::get('/chat/{bidderId}', [ChatController::class, 'showChat'])->name('chat-show');

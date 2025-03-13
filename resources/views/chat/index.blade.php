@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title') Chat with User @endsection
+@section('title') Chat @endsection
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -8,7 +8,6 @@
 <link href="{{ URL::asset('assets/libs/swiper/swiper.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <style>
-    /* Custom CSS for Message Alignment */
     .message {
         padding: 7px;
         border-radius: 5px;
@@ -18,14 +17,12 @@
     .text-left {
         text-align: left;
         background-color: #f1f1f1;
-        /* margin-left: 50px; */
     }
 
     .text-right {
         text-align: right;
         background-color: #dbdbdb;
         color: rgb(8, 8, 8);
-        /* margin-right: 50px; */
     }
 </style>
 @endsection
@@ -84,7 +81,7 @@
             @csrf
             <textarea id="message-input" class="form-control" placeholder="Type your message..." rows="3"></textarea>
             <div class="d-flex justify-content-end mt-2 me-2">
-                <button type="submit" class="btn btn-primary d-flex align-items-center">
+                <button type="submit" class="btn btn-rounded btn-success d-flex align-items-center">
                     <i class="ri-send-plane-fill me-2"></i> Send
                 </button>
             </div>
@@ -95,6 +92,9 @@
 
 @section('script')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ URL::asset('assets/libs/swiper/swiper.min.js')}}"></script>
+<script src="{{ URL::asset('/assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
+<script src="{{ URL::asset('/assets/js/app.min.js') }}"></script>
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script>
     Pusher.logToConsole = true;
@@ -104,9 +104,7 @@
 
     var channel = pusher.subscribe('chat-channel-{{ auth()->id() }}');
 
-    // Listen for the 'new-message' event
     channel.bind('new-message', function(data) {
-        console.log(data);
         let timestamp = new Date(data.chat.created_at);
         let formattedTime = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
         var messageHtml;
@@ -117,14 +115,15 @@
         }
         $('#messages').append(messageHtml);
         
-        // Automatically scroll to the bottom of the chat box
         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
     });
 
     $('#sendMessage').submit(function(e) {
         e.preventDefault();
         var message = $('#message-input').val();
-
+        if(message == '') {
+            return;
+        }
         $.ajax({
             url: "{{ route('send-message') }}",
             method: 'POST',

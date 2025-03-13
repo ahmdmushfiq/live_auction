@@ -15,8 +15,6 @@ class ChatController extends Controller
         $bidders = User::where('role', 'bidder')->get();
         return view('chat.users', compact('bidders'));
     }
-
-
     public function showChat($bidderId)
     {
         $bidder = User::find($bidderId);
@@ -47,16 +45,19 @@ class ChatController extends Controller
 
         return view('chat.index', compact('messages', 'adminId')); 
     }
-
     public function sendMessage(Request $request)
     {
+        $request->validate([
+            'message' => 'required',
+            'receiver_id' => 'required',
+        ]);
+        
         $chat = new Chat();
         $chat->sender_id = Auth::user()->id;
         $chat->receiver_id = $request->receiver_id;
         $chat->message = $request->message;
         $chat->save();
 
-        // Broadcast the message to the front end using Pusher
         event(new MessageSent($chat));
 
         return response()->json([

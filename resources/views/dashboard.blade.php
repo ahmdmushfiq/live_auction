@@ -8,6 +8,14 @@
 
 <div class="container">
     <h2>Live Auctions</h2>
+    @if (Auth::user()->isBidder())
+    <div class="text-center mb-4">
+        <h4>Watch Live Auction</h4>
+        <iframe width="100%" height="400px" src="{{ config('services.youtube.stream_url') }}" frameborder="0"
+            allowfullscreen>
+        </iframe>
+    </div>
+    @endif
 
     @if($products->isEmpty())
     <p>No active auctions available at the moment.</p>
@@ -29,16 +37,14 @@
                     <p>Current Price: <span id="current-price-{{ $product->id }}">{{ $product->current_price }}</span>
                     </p>
                     <p>Ends In: <span id="timer-{{ $product->id }}"></span></p>
-                    @if(Auth::user()->isBidder())
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary bid-button" data-id="{{ $product->id }}">
+                        @if(Auth::user()->isBidder())
+                        <button class="btn btn-danger bid-button" data-id="{{ $product->id }}">
                             Place Bid
                         </button>
-                        <a href="{{ route('bids-show', $product->id) }}" class="btn btn-primary">Show Bidders</a>
+                        @endif
+                        <a href="{{ route('bids-show', $product->id) }}" class="btn btn-warning">Show Bidders</a>
                     </div>
-                    @else
-                    <a href="{{ route('bids-show', $product->id) }}" class="btn btn-primary">Show Bidders</a>
-                    @endif
                 </div>
             </div>
         </div>
@@ -139,17 +145,17 @@
 
                 if (remaining <= 0) {
                     timerElement.innerText = "Auction Ended";
-                    clearInterval(countdownIntervals[productId]); // Stop the countdown
+                    clearInterval(countdownIntervals[productId]); 
                 } else {
                     timerElement.innerText = minutes + "m " + seconds + "s";
                 }
             }
 
             countdownIntervals[productId] = setInterval(updateCountdown, 1000);
-            updateCountdown(); // Run immediately
+            updateCountdown(); 
         }
 
-        // Store countdown intervals for each product
+       
         var countdownIntervals = {};
 
         // Enable pusher logging - don't include this in production
@@ -174,8 +180,8 @@
             }
             if (newEndTime) {
                 let updatedTime = new Date(newEndTime.replace(" ", "T")).getTime();
-                clearInterval(countdownIntervals[productId]); // Stop the previous countdown
-                startCountdown(productId, newEndTime); // Restart with the new end time
+                clearInterval(countdownIntervals[productId]); 
+                startCountdown(productId, newEndTime); 
             }
         });
 
