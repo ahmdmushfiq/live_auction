@@ -15,7 +15,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         if (request()->ajax()) {
             $products = Product::latest();
@@ -34,12 +34,9 @@ class ProductController extends Controller
                     return $product->end_time;
                 })
                 ->addColumn('image', function ($product) {
-                    if ($product->product_image) {
-                        $media = $product->getFirstMediaUrl('product_image'); 
-                        if ($media) {
-                            return '<img src="' . $media . '" border="0" width="60" class="img-rounded" align="center" />';
-                        }
-                        return 'No Image';
+                    $media = $product->getFirstMediaUrl('product_image');
+                    if (!empty($media)) {
+                        return '<img src="' . $media . '" border="0" width="60" class="img-rounded" align="center" />';
                     }
                     return 'No Image';
                 })
@@ -48,6 +45,12 @@ class ProductController extends Controller
                     <a href="javascript:void(0)" class="btn btn-primary btn-sm edit-btn" data-id="' . $product->id . '">Edit</a>
                     <a href="javascript:void(0)" class="btn btn-danger btn-sm delete-btn" data-id="' . $product->id . '">Delete</a>
                 ';
+                })
+                ->filter(function ($query) use ($request) {
+                    if (request()->has('search')) {
+                        $query->where('name', 'like', '%' . $request->search['value'] . '%')
+                            ->orWhere('starting_price', 'like', '%' . $request->search['value'] . '%');
+                    }
                 })
                 ->rawColumns(['action', 'image'])
                 ->make(true);
@@ -128,7 +131,7 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
-        }   
+        }
     }
 
     /**

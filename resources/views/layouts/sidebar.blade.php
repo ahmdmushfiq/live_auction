@@ -80,6 +80,11 @@
                             <i class="ri-chat-3-line"></i> <span>Chat Bidders</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('all-bidders') }}">
+                            <i class="ri-group-line"></i> <span>All Bidders</span>
+                        </a>
+                    </li>
                 @endif
                 @if(Auth::user()->isBidder())
                     <li class="nav-item">

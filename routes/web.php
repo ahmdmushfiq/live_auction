@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\BidderController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\ProductController;
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('admin', 'auth')->group(function () {
     Route::resource('/products', ProductController::class);
+    Route::get('all-bidders', [BidderController::class, 'index'])->name('all-bidders');
 });
 
 

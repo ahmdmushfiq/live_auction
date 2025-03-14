@@ -87,7 +87,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <!-- apexcharts -->
 <script src="{{ URL::asset('/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ URL::asset('/assets/libs/jsvectormap/jsvectormap.min.js') }}"></script>
@@ -158,7 +158,9 @@
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
+                        orderable: false,
+                        searchable: true
                     },
                     {
                         data: 'description',
@@ -166,7 +168,9 @@
                     },
                     {
                         data: 'starting_price',
-                        name: 'starting_price'
+                        name: 'starting_price',
+                        orderable: false,
+                        searchable: true
                     },
                     {
                         data: 'end_time',
@@ -197,30 +201,16 @@
                     $('#edit_name').val(response.data.name);
                     $('#edit_description').val(response.data.description);
                     $('#edit_price').val(response.data.starting_price);
-                    $('#edit_end_time').val(response.data.end_time);
-                    if(response.product_image) {
-                        $('.edit_image').filepond({
+                    $('#edit_end_time').val(response.data.end_time);                
+                    $('.edit_image').filepond({
                         credits: false,
-                        allowImagePreview: true, // Enable image preview
-                        allowFileTypeValidation: true, // Validate file types if needed
-                        allowFileSizeValidation: true, // Validate file size if needed
-                        acceptedFileTypes: ['image/*'], // Restrict to images
-                        maxFileSize: '3MB', // Example: limit file size to 5MB
-                        files: [{
-                            source: response.product_image,
-                        }],
-                        });
-                    }
-                    else {
-                        $('.edit_image').filepond({
-                        credits: false,
-                        allowImagePreview: true, // Enable image preview
-                        allowFileTypeValidation: true, // Validate file types if needed
-                        allowFileSizeValidation: true, // Validate file size if needed
-                        acceptedFileTypes: ['image/*'], // Restrict to images
-                        maxFileSize: '3MB', // Example: limit file size to 5MB
-                        });
-                    }
+                        allowImagePreview: true,
+                        allowFileTypeValidation: true,
+                        allowFileSizeValidation: true,
+                        acceptedFileTypes: ['image/*'],
+                        maxFileSize: '3MB',
+                        files: response.product_image ? [{ source: response.product_image }] : []
+                    });
                     $('#editProductModal').modal('show');
                 }
             }
@@ -259,5 +249,10 @@
             }
         })
     })
+
+    $('.close-modal').on('click', function () {
+        // location.reload();
+        alert('test');
+    });
 </script>
 @endsection
