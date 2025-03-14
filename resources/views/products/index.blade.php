@@ -201,7 +201,8 @@
                     $('#edit_name').val(response.data.name);
                     $('#edit_description').val(response.data.description);
                     $('#edit_price').val(response.data.starting_price);
-                    $('#edit_end_time').val(response.data.end_time);                
+                    $('#edit_end_time').val(response.data.end_time); 
+                    $('#edit_image').empty();  
                     $('.edit_image').filepond({
                         credits: false,
                         allowImagePreview: true,
@@ -233,7 +234,7 @@
                     url: "{{ route('products.destroy', ':id') }}".replace(':id', id),
                     type: 'DELETE',
                     data: {
-                    _token: "{{ csrf_token() }}"  // Add the CSRF token here
+                    _token: "{{ csrf_token() }}" 
                     },
                     success: function (response) {
                         if (response.status == 'success') {
